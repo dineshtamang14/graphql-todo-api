@@ -1,8 +1,10 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { users, tasks} = require("./constants/index");
 
 const typeDefs = gql`
     type Query {
         greetings: [String!]
+        tasks: [Task!]
     } 
 
     type User {
@@ -22,7 +24,13 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        greetings: () => ["hello", "world"]
+        greetings: () => ["hello", "world"],
+        tasks: () => tasks
+    },
+
+    // field level resolvers
+    Task: {
+        user: ({ userId }) => users.find(user => user.id == userId)
     }
 };
 
