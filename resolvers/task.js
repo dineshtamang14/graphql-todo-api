@@ -1,5 +1,3 @@
-const {users, tasks} = require("../constants");
-const uuid = require("uuid");
 
 module.exports = {
     Query: {
