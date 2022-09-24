@@ -1,20 +1,56 @@
+const { combineResolvers } = require("graphql-resolvers")
+const { isAuthenticated, isTaskOwner } = require("./middleware");
+const Task = require("../database/models/task");
+const User = require("../database/models/user");
 
 module.exports = {
     Query: {
-        tasks: () => tasks,
-        task: (_, { id } ) => tasks.find(task => task.id === id),
+        tasks: combineResolvers(isAuthenticated, async (_, __, { loggedInUserId }) => {
+            try {
+                const tasks = await Task.find({ user: loggedInUserId });
+                return tasks;
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
+        }),
+        task: combineResolvers(isAuthenticated, isTaskOwner, async (_, { id }) => {
+            try {
+                const task = await Task.findById(id);
+                return task;
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
+        })
     },
 
     Mutation: {
-        createTask: (_, {input}) => {
-            const task = {...input, id: uuid.v4()};
-            tasks.push(task);
-            return task;
-        }
+        createTask: combineResolvers(isAuthenticated, async (_, {input}, {email}) => {
+            try {
+                const user = await User.findOne({ email });
+                const task = new Task({...input, user: user.id});
+                const result = await task.save();
+                user.tasks.push(result.id);
+                await user.save();
+                return result;
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
+        })
     },
 
     // field level resolvers
     Task: {
-        user: ({ userId }) => users.find(user => user.id == userId),
+        user: async (parent) => {
+            try {
+                const user = await User.findById(parent.user);
+                return user;
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
+        }
     },
 }
