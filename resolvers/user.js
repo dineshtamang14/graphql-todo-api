@@ -1,29 +1,23 @@
 const bcrypt = require("bcryptjs"); 
+const { combineResolvers } = require("graphql-resolvers")
+
 const User = require("../database/models/user");
 const jwt = require("jsonwebtoken");
+const { isAuthenticated } = require("./middleware");
+const Task = require("../database/models/task");
 
 module.exports = {
     Query: {
-        users: async () => {
+        user: combineResolvers(isAuthenticated, async (_, __, {email}) => {
             try {
-                const users = await User.find();
-                if(users) return users;
-                throw new Error("Database is empty");
+                const user = await User.findOne({email});
+                if(!user) throw new Error(`user doesn't exists with id:${email}`);
+                return user;
             } catch (err) {
                 console.error(err);
                 throw err;
             }
-        },
-        user: async (_, {id}) => {
-            try {
-                const user = await User.findById({_id: id});
-                if(user) return user;
-                throw new Error(`user doesn't exists with id:${id}`)
-            } catch (err) {
-                console.error(err);
-                throw err;
-            }
-        }
+        })
     },
 
     Mutation: {
@@ -48,7 +42,7 @@ module.exports = {
         login: async (_, {input}) => {
             try {
                 const user = await User.findOne({email: input.email});
-                if(!user) throw new Error(`user not found with email ${input.email}`);
+                if(!user) throw new Error("user not found");
 
                 const isPasswordValid = await bcrypt.compare(input.password, user.password);
                 if(!isPasswordValid){
@@ -65,6 +59,14 @@ module.exports = {
     },
 
     User: {
-        tasks: ({id}) => tasks.filter(task => task.userId === id) 
+        tasks: async ({id}) => {
+            try {
+                const tasks = await Task.find({ user: id });
+                return tasks;
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
+        }
     }
 }
