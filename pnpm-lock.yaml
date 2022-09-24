@@ -2,16 +2,20 @@ lockfileVersion: 5.4
 
 specifiers:
   apollo-server: ^3.10.2
+  bcryptjs: ^2.4.3
   dotenv: ^16.0.2
   graphql: ^16.6.0
+  graphql-iso-date: ^3.6.1
   mongoose: ^6.6.1
   nodemon: ^2.0.20
   uuid: ^9.0.0
 
 dependencies:
   apollo-server: 3.10.2_graphql@16.6.0
+  bcryptjs: 2.4.3
   dotenv: 16.0.2
   graphql: 16.6.0
+  graphql-iso-date: 3.6.1_graphql@16.6.0
   mongoose: 6.6.1
   uuid: 9.0.0
 
@@ -502,6 +506,10 @@ packages:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
     dev: false
 
+  /bcryptjs/2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
+    dev: false
+
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
@@ -797,6 +805,14 @@ packages:
     dependencies:
       is-glob: 4.0.3
     dev: true
+
+  /graphql-iso-date/3.6.1_graphql@16.6.0:
+    resolution: {integrity: sha512-AwFGIuYMJQXOEAgRlJlFL4H1ncFM8n8XmoVDTNypNOZyQ8LFDG2ppMFlsS862BSTCDcSUfHp8PD3/uJhv7t59Q==}
+    peerDependencies:
+      graphql: ^0.5.0 || ^0.6.0 || ^0.7.0 || ^0.8.0-b || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0
+    dependencies:
+      graphql: 16.6.0
+    dev: false
 
   /graphql-tag/2.12.6_graphql@16.6.0:
     resolution: {integrity: sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==}
