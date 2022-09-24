@@ -3,6 +3,8 @@ const taskTypeDefs = require("./task");
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+    scalar Date
+    
     type Query {
         _: String
     }
