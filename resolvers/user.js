@@ -5,6 +5,8 @@ const User = require("../database/models/user");
 const jwt = require("jsonwebtoken");
 const { isAuthenticated } = require("./middleware");
 const Task = require("../database/models/task");
+const PubSub = require("apollo-server");
+const {userEvents} = require("../subscription/events")
 
 module.exports = {
     Query: {
@@ -31,6 +33,9 @@ module.exports = {
                const hashedPassword = await bcrypt.hash(input.password, 12);
                const newUser = new User({...input, password: hashedPassword});
                const result = await newUser.save();
+               PubSub.publish(userEvents.USER_CREATED, {
+                userCreated: result
+               });
                return result;
             } catch (err) {
                 console.error(err);
@@ -55,6 +60,12 @@ module.exports = {
                 console.error(err);
                 throw err;
             }
+        }
+    },
+
+    Subscription: {
+        userCreated: {
+            subscribe: () => PubSub.asyncIterator(userEvents.USER_CREATED)
         }
     },
 
