@@ -21,6 +21,12 @@ const server = new ApolloServer({
             user: new Dataloader(keys => loaders.user.batchUsers(keys))
         };
         return contextObj;
+    },
+    formatError: (error) => {
+        // console.error(error);
+        return {
+            message: error.message
+        }
     }
 })
 
