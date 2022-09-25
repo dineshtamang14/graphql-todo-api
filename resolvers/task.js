@@ -79,9 +79,10 @@ module.exports = {
 
     // field level resolvers
     Task: {
-        user: async (parent) => {
+        user: async (parent, _, { loaders }) => {
             try {
-                const user = await User.findById(parent.user);
+                // const user = await User.findById(parent.user);
+                const user = await loaders.user.load(parent.user.toString());
                 return user;
             } catch (err) {
                 console.error(err);
