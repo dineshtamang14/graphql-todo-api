@@ -19,6 +19,6 @@ const server = new ApolloServer({
 // db connectivity
 connection();
 
-server.listen().then(({ url }) => {
+server.listen({port: 4000}).then(({ url }) => {
     console.log(`🚀 Server ready at ${url}`);
   });
