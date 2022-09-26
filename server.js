@@ -10,6 +10,9 @@ const loaders = require("./loaders");
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    cors: {
+        origin: ["*"]
+    },
     context: async ({ req, connection }) => {
         const contextObj = {};
         if(req){
