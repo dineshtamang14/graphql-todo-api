@@ -1,5 +1,8 @@
-const { ApolloServer } = require('apollo-server');
+const express = require("express"); 
+const cors = require("cors");
+const { ApolloServer } = require('apollo-server-express');
 const Dataloader = require("dataloader");
+const morgan = require("morgan");
 
 const resolvers = require("./resolvers");
 const typeDefs = require("./typeDefs");
@@ -7,12 +10,16 @@ const {connection} = require("./database/util");
 const { verifyUser } = require("./helper/context");
 const loaders = require("./loaders");
 
-const server = new ApolloServer({
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+app.use(morgan("dev"));
+
+const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
-    cors: {
-        origin: ["*"]
-    },
     context: async ({ req, connection }) => {
         const contextObj = {};
         if(req){
@@ -31,13 +38,40 @@ const server = new ApolloServer({
             message: error.message
         }
     }
-})
+});
 
 // db connectivity
 connection();
 
-server.listen({port: 4000}).then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
-  });
+app.get("/", (req, res) => {
+    res.status(200).send({
+        name: "Dinesh Tamang",
+        profile: "https://dineshtamang.tech",
+        portfolio: "https://portfolio.dineshtamang.tech",
+        github: "https://github.com/dineshtamang14",
+        projects: [
+            "Netfilx Clone",
+            "Facebook clone",
+            "Whats App Clone",
+            "Graphql API",
+            "Rest API",
+            "Amazon clone",
+            "Tinder Clone"
+        ]
+    });
+})
 
-// app.installSubscriptionHandlers(httpServer);
+const PORT = process.env.PORT || 4000;
+
+apolloServer.start().then(res => {
+    apolloServer.applyMiddleware({ 
+        app, 
+        path: '/graphql' 
+    }); 
+
+    app.listen(PORT, () => {
+        console.log(`🚀 Server ready at localhost:4000${apolloServer.graphqlPath}`);
+      });
+})
+
+// apolloServer.installSubscriptionHandlers(httpServer);

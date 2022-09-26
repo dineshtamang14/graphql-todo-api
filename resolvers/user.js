@@ -5,7 +5,7 @@ const User = require("../database/models/user");
 const jwt = require("jsonwebtoken");
 const { isAuthenticated } = require("./middleware");
 const Task = require("../database/models/task");
-const PubSub = require("apollo-server");
+const PubSub = require("apollo-server-express");
 const {userEvents} = require("../subscription/events")
 
 module.exports = {

@@ -1,6 +1,6 @@
 const userTypeDefs = require("./user");
 const taskTypeDefs = require("./task");
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
     scalar Date
